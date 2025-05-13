@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Exposee - Documentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .endpoint {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        .method {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .get {
+            background-color: #61affe;
+        }
+        .post {
+            background-color: #49cc90;
+        }
+        .delete {
+            background-color: #f93e3e;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Webhook Exposee API Documentation</h1>
+    <p>This documentation explains how to integrate with our webhook system.</p>
+
+    <h2>Overview</h2>
+    <p>The webhook system allows you to register URLs that will be called when specific events occur in our system. 
+       We support various payment and invoice related events that you can subscribe to.</p>
+
+    <h2>Event Types</h2>
+    <p>The following event types are available for subscription:</p>
+    <table>
+        <tr>
+            <th>Event Type</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>payment.received</code></td>
+            <td>Triggered when a payment is received</td>
+        </tr>
+        <tr>
+            <td><code>payment.processed</code></td>
+            <td>Triggered when a payment is processed</td>
+        </tr>
+        <tr>
+            <td><code>invoice.processing</code></td>
+            <td>Triggered when an invoice begins processing</td>
+        </tr>
+        <tr>
+            <td><code>invoice.completed</code></td>
+            <td>Triggered when an invoice is completed</td>
+        </tr>
+    </table>
+
+    <h2>API Endpoints</h2>
+
+    <div class="endpoint">
+        <h3><span class="method get">GET</span> /events</h3>
+        <p>Returns all available event types that you can subscribe to.</p>
+        
+        <h4>Response Example:</h4>
+        <pre>
+{
+  "events": [
+    "payment.received",
+    "payment.processed",
+    "invoice.processing",
+    "invoice.completed"
+  ],
+  "description": {
+    "payment.received": "Triggered when a payment is received",
+    "payment.processed": "Triggered when a payment is processed",
+    "invoice.processing": "Triggered when an invoice begins processing",
+    "invoice.completed": "Triggered when an invoice is completed"
+  }
+}</pre>
+    </div>
+
+    <div class="endpoint">
+        <h3><span class="method post">POST</span> /webhooks/register</h3>
+        <p>Register a URL to be called when a specific event occurs.</p>
+        
+        <h4>Request Body:</h4>
+        <pre>
+{
+  "url": "https://your-server.com/webhook",
+  "eventType": "payment.received"
+}</pre>
+        
+        <h4>Response Example:</h4>
+        <pre>
+{
+  "id": 1,
+  "url": "https://your-server.com/webhook",
+  "eventType": "payment.received",
+  "success": true
+}</pre>
+    </div>
+
+    <div class="endpoint">
+        <h3><span class="method delete">DELETE</span> /webhooks/unregister</h3>
+        <p>Unregister a previously registered webhook.</p>
+        
+        <h4>Request Body:</h4>
+        <pre>
+{
+  "url": "https://your-server.com/webhook",
+  "eventType": "payment.received"
+}</pre>
+        
+        <h4>Response Example:</h4>
+        <pre>
+{
+  "message": "Webhook unregistered successfully"
+}</pre>
+    </div>
+
+    <div class="endpoint">
+        <h3><span class="method post">POST</span> /ping</h3>
+        <p>Test your webhook integration by sending a ping event to all your registered webhook URLs.</p>
+        
+        <h4>Response Example:</h4>
+        <pre>
+{
+  "totalPinged": 2,
+  "results": [
+    {
+      "webhook": "https://your-server.com/webhook",
+      "success": true,
+      "statusCode": 200
+    },
+    {
+      "webhook": "https://your-other-server.com/webhook",
+      "success": false,
+      "error": "ECONNREFUSED"
+    }
+  ]
+}</pre>
+    </div>
+
+    <div class="endpoint">
+        <h3><span class="method post">POST</span> /events/:eventType/trigger</h3>
+        <p>Manually trigger an event type. This is useful for testing purposes.</p>
+        
+        <h4>URL Parameters:</h4>
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><code>:eventType</code></td>
+                <td>One of the available event types (e.g., <code>payment.received</code>)</td>
+            </tr>
+        </table>
+        
+        <h4>Request Body:</h4>
+        <p>A JSON object containing any data you want to send with the event.</p>
+        <pre>
+{
+  "paymentId": "12345",
+  "amount": 100.50,
+  "currency": "USD"
+}</pre>
+        
+        <h4>Response Example:</h4>
+        <pre>
+{
+  "eventType": "payment.received",
+  "webhooksTriggered": 1,
+  "results": [
+    {
+      "webhook": "https://your-server.com/webhook",
+      "success": true,
+      "statusCode": 200
+    }
+  ]
+}</pre>
+    </div>
+
+    <h2>Webhook Payload Structure</h2>
+    <p>When an event is triggered, your registered webhook URL will receive a POST request with the following structure:</p>
+    <pre>
+{
+  "event": "payment.received",
+  "timestamp": "2023-10-15T12:34:56.789Z",
+  "data": {
+    // Whatever payload was sent when triggering the event
+  }
+}</pre>
+
+    <h2>Headers</h2>
+    <p>Each webhook request will include the following headers:</p>
+    <table>
+        <tr>
+            <th>Header</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>Content-Type</code></td>
+            <td>application/json</td>
+        </tr>
+        <tr>
+            <td><code>X-Webhook-Event</code></td>
+            <td>The event type that triggered this webhook call</td>
+        </tr>
+    </table>
+
+    <h2>Integration Guide</h2>
+    <p>Here's a step-by-step guide to integrate with our webhook system:</p>
+    <ol>
+        <li>Create an endpoint on your server to receive webhook events</li>
+        <li>Register your endpoint URL with our webhook system using the <code>/webhooks/register</code> endpoint</li>
+        <li>Test your integration using the <code>/ping</code> endpoint</li>
+        <li>Implement appropriate error handling and retries on your end</li>
+        <li>Process the webhook events as they arrive</li>
+    </ol>
+
+    <h2>Example Code (Node.js)</h2>
+    <p>Here's an example of how to register a webhook:</p>
+    <pre>
+const axios = require('axios');
+
+async function registerWebhook() {
+  try {
+    const response = await axios.post('http://localhost:3000/webhooks/register', {
+      url: 'https://your-server.com/webhook',
+      eventType: 'payment.received'
+    });
+    
+    console.log('Webhook registered successfully:', response.data);
+  } catch (error) {
+    console.error('Error registering webhook:', error.response?.data || error.message);
+  }
+}
+
+registerWebhook();</pre>
+
+    <p>And here's an example Express endpoint to receive webhooks:</p>
+    <pre>
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+app.post('/webhook', (req, res) => {
+  const event = req.headers['x-webhook-event'];
+  const payload = req.body;
+  
+  console.log(`Received ${event} event:`, payload);
+  
+  // Process the webhook based on the event type
+  switch (event) {
+    case 'payment.received':
+      // Handle payment received
+      break;
+    case 'invoice.completed':
+      // Handle invoice completed
+      break;
+    case 'ping':
+      // Handle ping event
+      break;
+  }
+  
+  // Always respond with 200 OK to acknowledge receipt
+  res.status(200).json({ received: true });
+});
+
+app.listen(4000, () => {
+  console.log('Webhook receiver listening on port 4000');
+});</pre>
+
+    <h2>Best Practices</h2>
+    <ul>
+        <li>Respond to webhook calls quickly (within 5 seconds) to avoid timeouts</li>
+        <li>Implement idempotency by checking for duplicate events</li>
+        <li>Use a queue system if you need to process events asynchronously</li>
+        <li>Implement proper error handling on your webhook endpoint</li>
+        <li>Consider using a tool like ngrok for local development testing</li>
+    </ul>
+</body>
+</html> 

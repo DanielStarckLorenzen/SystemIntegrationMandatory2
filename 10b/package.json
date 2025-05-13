@@ -1,0 +1,14 @@
+{
+  "name": "database-migration",
+  "version": "1.0.0",
+  "description": "Script to migrate data from MongoDB to PostgreSQL",
+  "main": "migrate.js",
+  "scripts": {
+    "migrate": "node migrate.js"
+  },
+  "dependencies": {
+    "mongoose": "^7.5.0",
+    "pg": "^8.11.3",
+    "dotenv": "^16.3.1"
+  }
+} 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>WebRTC Chat</h1>
+        
+        <div class="setup-box">
+            <div class="connection-controls">
+                <h2>Connection Setup</h2>
+                <button id="createBtn">Create Room</button>
+                <div class="join-room">
+                    <input type="text" id="roomId" placeholder="Room ID">
+                    <button id="joinBtn">Join Room</button>
+                </div>
+                <div id="currentRoom"></div>
+            </div>
+            
+            <div id="offerArea" class="signal-area">
+                <h3>Your Offer:</h3>
+                <textarea id="offerText" readonly></textarea>
+                <button id="copyOfferBtn">Copy Offer</button>
+            </div>
+            
+            <div id="answerArea" class="signal-area">
+                <h3>Paste Answer Here:</h3>
+                <textarea id="answerText" placeholder="Paste the answer from the other person here..."></textarea>
+                <button id="submitAnswerBtn">Submit Answer</button>
+            </div>
+            
+            <div id="receivedOfferArea" class="signal-area">
+                <h3>Paste Offer Here:</h3>
+                <textarea id="receivedOfferText" placeholder="Paste the offer from the room creator here..."></textarea>
+                <button id="submitOfferBtn">Submit Offer</button>
+            </div>
+            
+            <div id="generatedAnswerArea" class="signal-area">
+                <h3>Your Answer:</h3>
+                <textarea id="generatedAnswerText" readonly></textarea>
+                <button id="copyAnswerBtn">Copy Answer</button>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div id="messages" class="messages"></div>
+            <div class="input-area">
+                <input type="text" id="messageInput" placeholder="Type your message...">
+                <button id="sendBtn">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
