@@ -1,0 +1,24 @@
+# Example .env file for webhook integration
+# Copy this file to .env and replace the example values with your actual values
+
+# The base URL of your ngrok tunnel pointing to the webhook provider service
+NGROK_URL=https://your-ngrok-url.ngrok.io
+
+# The webhook.site URL to use for receiving webhook events
+WEBHOOK_URL=https://webhook.site/your-unique-id
+
+# Optional: Secret key for webhook authentication (will be auto-generated if not provided)
+SECRET_KEY=your-secret-key
+
+# Optional: Event type to register with (defaults to interactive selection)
+# Valid values: payment.received, payment.processed, invoice.processing, invoice.completed
+EVENT_TYPE=payment.received
+
+# Optional: Event type to trigger during testing (defaults to interactive selection)
+TRIGGER_EVENT_TYPE=payment.received
+
+# Optional: Test method to use (payment or trigger, defaults to interactive selection)
+TEST_METHOD=payment
+
+# Optional: Whether to automatically open browser windows (true/false, defaults to true)
+AUTO_OPEN=true 
