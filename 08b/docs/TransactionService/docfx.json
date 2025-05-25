@@ -1,0 +1,35 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": ["TransactionService.csproj"],
+          "src": "../../Microservices/TransactionService"
+        }
+      ],
+      "dest": "api",
+      "properties": {
+        "TargetFramework": "net9.0"
+      }
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": ["*.md", "toc.yml"]
+      }
+    ],
+    "resource": [
+      {
+        "files": ["images/**"]
+      }
+    ],
+    "dest": "_site",
+    "globalMetadata": {
+      "_appTitle": "TransactionService Documentation",
+      "_enableSearch": true
+    },
+    "template": ["default"],
+    "markdownEngineName": "markdig"
+  }
+}
